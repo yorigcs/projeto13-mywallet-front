@@ -8,6 +8,7 @@ const Name = styled.h1`
     color: white;
     font-size: 32px;
     font-family: 'Saira Stencil One', cursive;
+    margin-bottom: 24px
 
 `
 
