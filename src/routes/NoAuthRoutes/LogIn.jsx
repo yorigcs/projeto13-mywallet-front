@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import AppName from "../../Shared/AppName";
 import { Form, Input, Button } from "../../assets/CustomStyles"
@@ -19,7 +20,7 @@ const LogIn = () => {
                 <Button type="submit">Entrar</Button>
             </Form>
 
-            <a href="http://localhost">Primeira vez? Cadastre-se</a>
+            <Link to="SignIn">Primeira vez? Cadastre-se</Link>
         </Container>
     )
 }
@@ -33,7 +34,9 @@ const Container = styled.main`
  height: 80vh;
 
  a {
-    margin-top: 36px
+    margin-top: 36px;
+    color: white;
+    font-weight: 700;
  }
 `
 export default LogIn;

@@ -15,6 +15,7 @@ const Input = styled.input`
     font-family: 'Raleway', sans-serif;
     font-size: 20px;
     font-weight: 400;
+    padding: 10px;
 `;
 
 const Button = styled.button`

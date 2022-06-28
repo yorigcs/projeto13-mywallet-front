@@ -33,6 +33,7 @@ const GlobalStyles = createGlobalStyle`
     line-height: 1;
     background-color: #8C11BE;
     padding: 20px;
+    font-family: 'Raleway', sans-serif;
   }
   ol, ul {
     list-style: none;
