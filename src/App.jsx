@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import GlobalStyles from './assets/GlobalStyles'
 import LogIn from './routes/NoAuthRoutes/LogIn'
-import SignIn from './routes/NoAuthRoutes/SignIn'
+import SignUp from './routes/NoAuthRoutes/SignUp'
 
 function App() {
 
@@ -12,7 +12,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LogIn />} />
-          <Route path="/SignIn" element={<SignIn />} />
+          <Route path="/SignUp" element={<SignUp />} />
         </Routes>
       </BrowserRouter>
     </>

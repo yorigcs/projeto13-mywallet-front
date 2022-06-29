@@ -20,7 +20,7 @@ const LogIn = () => {
                 <Button type="submit">Entrar</Button>
             </Form>
 
-            <Link to="SignIn">Primeira vez? Cadastre-se</Link>
+            <Link to="SignUp">Primeira vez? Cadastre-se</Link>
         </Container>
     )
 }
