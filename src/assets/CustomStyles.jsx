@@ -33,4 +33,10 @@ const Button = styled.button`
     color: white;
     
 `
-export { Form, Input, Button };
+
+const ErrorStyle = styled.p`
+    color: orange;
+    font-weight: 700;
+    font-size: 14px;
+`
+export { Form, Input, Button, ErrorStyle };

@@ -1,20 +1,20 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import GlobalStyles from './assets/GlobalStyles'
-import LogIn from './routes/NoAuthRoutes/LogIn'
-import SignUp from './routes/NoAuthRoutes/SignUp'
+import Routes from './routes'
+import { AuthProvider } from './Contexts/auth'
 
 function App() {
 
 
   return (
     <>
-      <GlobalStyles />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LogIn />} />
-          <Route path="/SignUp" element={<SignUp />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <GlobalStyles />
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      </AuthProvider>
+
     </>
   )
 }

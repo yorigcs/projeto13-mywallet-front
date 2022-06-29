@@ -3,7 +3,7 @@ import { ThreeDots } from "react-loader-spinner";
 import sucessLottie from "../assets/Lottie/sucess.json";
 import errorLottie from "../assets/Lottie/error.json";
 
-const HandleButton = ( loading, sucess, error ) => {
+const HandleButton = ( loading, sucess, error, message ) => {
     if (loading) {
         return <ThreeDots color="#00BFFF" height={50} width={50} />;
     } else if (sucess) {
@@ -13,7 +13,7 @@ const HandleButton = ( loading, sucess, error ) => {
         
         return <Lottie animationData={errorLottie} loop={false} style={{height: 50, width: 50}} />
     } else {
-        return "Cadastrar"
+        return message
     }
 }
 

@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import AppName from "../../Shared/AppName";
-import { Form, Input, Button } from "../../assets/CustomStyles"
-import axiosI from "../../services/axios"
-import HandleButton from "../../Shared/HandleButton"
+import AppName from "../Shared/AppName";
+import { Form, Input, Button, ErrorStyle } from "../assets/CustomStyles"
+import axiosI from "../services/axios"
+import HandleButton from "../Shared/HandleButton"
 const SignUp = () => {
     const [signUpData, setSignUpData] = useState(
         {
@@ -60,20 +60,19 @@ const SignUp = () => {
         return isValid;
     }
 
-    const handleForm = () => {
+    const handleForm = async () => {
         if (!isValid()) return;
-
         setLoading(true);
-        axiosI.post("/signUp", signUpData)
-            .then(() => {
-                setLoading(false)
-                setSucess(true);
-            })
-            .catch((err) => {
-                console.log(err);
-                setLoading(false)
-                setError(true);
-            })
+        try {
+            await axiosI.post("/signUp", signUpData)
+            setLoading(false)
+            setSucess(true);
+        } catch (err) {
+            console.log(err);
+            setLoading(false)
+            setError(true);
+        }
+
     }
 
     return (
@@ -81,17 +80,18 @@ const SignUp = () => {
             <AppName>MyWallet</AppName>
             <Form >
                 <Input name="name" type="text" placeholder="Nome" onChange={handleChange} value={signUpData.name} />
-                {nameError ? <p>{nameError}</p> : null}
+                {nameError ? <ErrorStyle>{nameError}</ErrorStyle> : null}
                 <Input name="email" type="email" placeholder="E-mail" onChange={handleChange} value={signUpData.email} />
-                {emailError ? <p>{emailError}</p> : null}
+                {emailError ? <ErrorStyle>{emailError}</ErrorStyle> : null}
                 <Input name="password" type="password" placeholder="Senha" onChange={handleChange} value={signUpData.password} />
-                {passwordError ? <p>{passwordError}</p> : null}
+                {passwordError ? <ErrorStyle>{passwordError}</ErrorStyle> : null}
                 <Input name="confirmPw" type="password" placeholder="Confirme a senha" onChange={handleChange} value={signUpData.confirmPw} />
-                {confirmPwError ? <p>{confirmPwError}</p> : null}
+                {confirmPwError ? <ErrorStyle>{confirmPwError}</ErrorStyle> : null}
                 <Button type="button" onClick={handleForm}>
-                    {HandleButton(loading, sucess, error)}
+                    {HandleButton(loading, sucess, error, "Cadastrar")}
                 </Button>
             </Form>
+
             <Link to="/">Já tem uma conta? Entre agora!</Link>
         </Container>
     )
