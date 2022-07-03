@@ -9,10 +9,17 @@ import { AiOutlinePlusCircle, AiOutlineMinusCircle } from 'react-icons/ai'
 const Home = () => {
     let navigate = useNavigate();
     const { userInfo } = useAuth();
-    const [registerLog,setRegisterLog] = useState(null);
+    const [registerLog, setRegisterLog] = useState([]);
 
-   
-    
+    useEffect(() => {
+        axiosI.get(`/balanceLogs/${userInfo.email}`)
+            .then((res) => {
+                setRegisterLog(res.data)
+                console.log(res)
+            })
+            .catch((err) => { console.log(err) });
+    }, [])
+
     return (
         <>
             <TopHeader>
@@ -21,7 +28,7 @@ const Home = () => {
             </TopHeader>
 
             <RegisterLog>
-                
+                {registerLog.map(register => <HandleLog key={register._id} {...register} />)}
             </RegisterLog>
 
             <Footer>
@@ -40,8 +47,19 @@ const Home = () => {
     )
 }
 
-const HandleLog = () => {
-
+const HandleLog = ({ _id, date, type, value, description }) => {
+    return (
+        <Registered id={_id} >
+            <div>
+                <RegisterDate>{date}</RegisterDate>
+                <RegisterDescription>{description}</RegisterDescription>
+            </div>
+            <RegisterValue
+                color={type === "Input" ? "#03AC00" : "##C70000"}>
+                {value}
+            </RegisterValue>
+        </Registered>
+    )
 }
 const TopHeader = styled.header`
     display:flex;
@@ -49,15 +67,36 @@ const TopHeader = styled.header`
     h1 {
         font-size: 26px;
         font-weight: 700;
-        color: white
+        color: white;
     }
 `
 const RegisterLog = styled.main`
+    padding: 20px;
     margin: 20px 0;
     background-color: white;
     border-radius: 5px;
     width: 100%;
     min-height: 70vh;
+`
+
+const Registered = styled.div`
+    margin-bottom: 15px;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    div {
+        display: flex;
+        gap: 10px;
+    }
+`
+const RegisterDate = styled.div`
+    color: #C6C6C6;
+`
+const RegisterDescription = styled.div`
+    color: black;
+`
+const RegisterValue = styled.div`
+ color: ${props => props.color}
 `
 const Footer = styled.footer`
     display: flex;

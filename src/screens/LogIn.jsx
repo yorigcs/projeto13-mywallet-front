@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../Contexts/auth";
@@ -11,7 +11,6 @@ import axiosI from "../services/axios";
 const LogIn = () => {
     const { setUserInfo } = useAuth();
     const [loginData, setLoginData] = useState({ email: '', password: '' });
-    useEffect(() => {console.log(loginData)},[loginData])
     // button states
     const [loading, setLoading] = useState(false);
     const [sucess, setSucess] = useState(false);
@@ -50,18 +49,24 @@ const LogIn = () => {
         if (!isValid()) return;
         setLoading(true)
         try {
-            const res = await axiosI.post("/signIn",loginData)
-            console.log(res)
+            const res = await axiosI.post("/signIn", loginData)
+
             setLoading(false)
             setSucess(true);
             setUserInfo(res.data.user)
+            //set header authorization token
+            axiosI.defaults.headers["Authorization"] = `Bearer ${res.data.token}`
+            //storage data
+            localStorage.setItem("MWAuthUser", JSON.stringify(res.data.user));
+            localStorage.setItem("MWAuthToken", res.data.token)
+
+
         } catch (err) {
-            console.log(err.response);
             setLoading(false)
             setError(true);
             setApiError(err.response.data)
 
-            setTimeout(()=> {
+            setTimeout(() => {
                 setError(false)
                 setApiError(null)
             }, 2500)

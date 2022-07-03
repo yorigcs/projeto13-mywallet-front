@@ -1,13 +1,18 @@
 import { Form, Input, Button, ErrorStyle } from '../assets/CustomStyles'
+import { useAuth } from '../Contexts/auth';
 import HandleButton from "../Shared/HandleButton"
 import axiosI from "../services/axios";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { RiArrowGoBackLine } from 'react-icons/ri'
+import dayjs from 'dayjs';
+const TIME = 1500;
+
 const NewInput = () => {
+    const { userInfo } = useAuth();
     let navigate = useNavigate();
-    const [entry, setEntry] = useState({ value: '', description: '' });
+    const [newInput, setNewInput] = useState({ value: '', description: '' });
 
     const [loading, setLoading] = useState(false);
     const [sucess, setSucess] = useState(false);
@@ -22,17 +27,17 @@ const NewInput = () => {
         setValueError(null);
         setDescriptionError(null)
 
-        if (isNaN(parseInt(entry.value))) {
+        if (isNaN(parseInt(newInput.value))) {
             setValueError("Digite apenas números!");
             isValid = false;
         }
 
-        if (entry.description.length < 3) {
+        if (newInput.description.length < 3) {
             setDescriptionError("A descrição precisa ter no mínimo três carácteres");
             isValid = false;
         }
 
-        if (entry.description.length > 100) {
+        if (newInput.description.length > 100) {
             setDescriptionError("A descrição precisa ter no máximo 100 carácteres");
             isValid = false;
         }
@@ -40,20 +45,29 @@ const NewInput = () => {
         return isValid;
     }
     function handleChange(e) {
-        setEntry({
-            ...entry,
+        setNewInput({
+            ...newInput,
             [e.target.name]: e.target.value
         })
     }
 
     async function registerEntry() {
         if (!isValid()) return;
-
+        console.log(userInfo.email)
         setLoading(true);
         try {
-            await axiosI.post("/signUp", signUpData)
+            await axiosI
+                .post(`/newRegister/${userInfo.email}`,
+                    {
+                        ...newInput,
+                        type: "Input",
+                        date: dayjs().format('DD/MM')
+                        
+                    }
+                )
             setLoading(false)
             setSucess(true);
+            setTimeout(() => navigate("../", {replace: true}),TIME)
         } catch (err) {
             console.log(err);
             setLoading(false)
@@ -73,13 +87,13 @@ const NewInput = () => {
                             color: "white",
                             cursor: "pointer"
                         }
-                    } 
+                    }
                 />
             </TopHeader>
             <Form>
-                <Input name="value" placeholder='Valor' onChange={handleChange} value={entry.value} />
+                <Input name="value" placeholder='Valor' onChange={handleChange} value={newInput.value} />
                 {valueError ? <ErrorStyle>{valueError}</ErrorStyle> : null}
-                <Input name="description" placeholder='Descrição' onChange={handleChange} value={entry.description} />
+                <Input name="description" placeholder='Descrição' onChange={handleChange} value={newInput.description} />
                 {descriptionError ? <ErrorStyle>{descriptionError}</ErrorStyle> : null}
                 <Button type="Button" onClick={registerEntry}>
                     {HandleButton(loading, sucess, error, "Salvar entrada")}
