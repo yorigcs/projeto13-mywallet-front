@@ -51,7 +51,7 @@ const NewInput = () => {
         })
     }
 
-    async function registerEntry() {
+    async function registerInput() {
         if (!isValid()) return;
         console.log(userInfo.email)
         setLoading(true);
@@ -95,7 +95,7 @@ const NewInput = () => {
                 {valueError ? <ErrorStyle>{valueError}</ErrorStyle> : null}
                 <Input name="description" placeholder='Descrição' onChange={handleChange} value={newInput.description} />
                 {descriptionError ? <ErrorStyle>{descriptionError}</ErrorStyle> : null}
-                <Button type="Button" onClick={registerEntry}>
+                <Button type="Button" onClick={registerInput}>
                     {HandleButton(loading, sucess, error, "Salvar entrada")}
                 </Button>
             </Form>
