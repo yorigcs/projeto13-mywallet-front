@@ -1,11 +1,14 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import AppName from "../Shared/AppName";
 import { Form, Input, Button, ErrorStyle } from "../assets/CustomStyles"
 import axiosI from "../services/axios"
 import HandleButton from "../Shared/HandleButton"
+const TIME = 2500;
 const SignUp = () => {
+    let navigate = useNavigate();
     const [signUpData, setSignUpData] = useState(
         {
             name: "",
@@ -24,6 +27,8 @@ const SignUp = () => {
     const [sucess, setSucess] = useState(false);
     const [error, setError] = useState(false);
 
+    const [apiError, setApiError] = useState(null);
+    
     const handleChange = (e) => {
         setSignUpData({ ...signUpData, [e.target.name]: e.target.value })
     }
@@ -35,8 +40,8 @@ const SignUp = () => {
         setPasswordError(null);
         setConfirmPwError(null);
 
-        if (signUpData.name.length < 3 || signUpData.name.length > 12) {
-            setNameError("O nome deve ter mais que três carácteres e menor que 12.");
+        if (signUpData.name.length < 3 || signUpData.name.length > 20) {
+            setNameError("O nome deve ter mais que três carácteres e menos que 20.");
             isValid = false;
         }
 
@@ -46,8 +51,8 @@ const SignUp = () => {
             isValid = false;
         }
 
-        if (signUpData.password.length < 4) {
-            setPasswordError("A senha deve ser maior que quatro carácteres");
+        if (signUpData.password.length < 3) {
+            setPasswordError("A senha deve ser maior que três carácteres");
             isValid = false;
         }
 
@@ -67,10 +72,17 @@ const SignUp = () => {
             await axiosI.post("/signUp", signUpData)
             setLoading(false)
             setSucess(true);
+            setTimeout(() => navigate("../", {replace: true}),TIME)
         } catch (err) {
-            console.log(err);
+            console.log(err.response);
             setLoading(false)
             setError(true);
+            setApiError(err.response.data)
+
+            setTimeout(()=> {
+                setError(false)
+                setApiError(null)
+            }, TIME)
         }
 
     }
@@ -90,6 +102,7 @@ const SignUp = () => {
                 <Button type="button" onClick={handleForm}>
                     {HandleButton(loading, sucess, error, "Cadastrar")}
                 </Button>
+                {apiError ? <ErrorStyle>{apiError}</ErrorStyle> : null}
             </Form>
 
             <Link to="/">Já tem uma conta? Entre agora!</Link>

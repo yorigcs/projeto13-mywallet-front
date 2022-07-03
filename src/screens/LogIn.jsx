@@ -11,6 +11,7 @@ import axiosI from "../services/axios";
 const LogIn = () => {
     const { setUserInfo } = useAuth();
     const [loginData, setLoginData] = useState({ email: '', password: '' });
+    useEffect(() => {console.log(loginData)},[loginData])
     // button states
     const [loading, setLoading] = useState(false);
     const [sucess, setSucess] = useState(false);
@@ -42,25 +43,23 @@ const LogIn = () => {
     }
 
     const handleChange = (e) => {
-        setLoginData({ ...loginData, [e.target.name]: e.target.value });
+        setLoginData({ ...loginData, [e.target.name]: e.target.value })
     }
 
     async function HandleLogIn() {
         if (!isValid()) return;
         setLoading(true)
         try {
-            const res = await axiosI.get("/users",)
-            setUserInfo(user.res)
+            const res = await axiosI.post("/signIn",loginData)
+            console.log(res)
             setLoading(false)
             setSucess(true);
+            setUserInfo(res.data.user)
         } catch (err) {
-            console.log(err);
+            console.log(err.response);
             setLoading(false)
             setError(true);
-            
-            if(err.response.status === 404) {
-                setApiError("E-mail ou senha incorreto(a)")
-            }
+            setApiError(err.response.data)
 
             setTimeout(()=> {
                 setError(false)

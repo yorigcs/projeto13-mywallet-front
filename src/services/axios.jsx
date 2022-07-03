@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosI = axios.create({
-    baseURL: "goiogle.com"
+    baseURL: "http://localhost:5000"
 });
 
 export default axiosI
