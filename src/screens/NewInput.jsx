@@ -53,7 +53,6 @@ const NewInput = () => {
 
     async function registerInput() {
         if (!isValid()) return;
-        console.log(userInfo.email)
         setLoading(true);
         try {
             await axiosI

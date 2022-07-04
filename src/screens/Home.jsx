@@ -19,14 +19,14 @@ const Home = () => {
         axiosI.get(`/balanceLogs/${userInfo.email}`)
             .then((res) => {
                 setRegisterLog(res.data);
-                setLoading(false);
-                setMyBalance(getBalance())
+                setLoading(false);                
             })
             .catch((err) => {
                 setLoading(false);
                 handleSignOut();
             });
     }, [])
+     useEffect(() => {setMyBalance(getBalance())},[registerLog])
 
     function handleSignOut() {
         localStorage.removeItem("MWAuthUser")
@@ -37,15 +37,48 @@ const Home = () => {
     function getBalance() {
         let allIn = 0;
         let allOut = 0;
-        const allInRegister = 
-        registerLog.filter((register) => register.type === "Input");
-        allInRegister.forEach((register) => {allIn += parseInt(register.value)})
-        const allOutRegister = 
-        registerLog.filter((register) => register.type === "Output");
-        allOutRegister.forEach((register) => {allOut += parseInt(register.value)})
+        const allInRegister =
+            registerLog.filter((register) => register.type === "Input");
+        allInRegister.forEach((register) => { allIn += parseInt(register.value) })
+        const allOutRegister =
+            registerLog.filter((register) => register.type === "Output");
+        allOutRegister.forEach((register) => { allOut += parseInt(register.value) })
 
         return allIn - allOut;
-    }   
+    }
+
+    function renderContainerType() {
+        if (registerLog.length === 0 && !loading) {
+            return (
+                <RegisterLog align="center" justify="center">
+                   <p> Não há registros de
+                    entrada ou saída</p>
+                </RegisterLog>
+            )
+        }
+
+        if (loading) {
+            return (
+                <RegisterLog align="center" justify="center">
+                    <ThreeDots color="#00BFFF" height={60} width={60} />
+                </RegisterLog>
+            )
+        } else {
+            return (
+                <>
+                    <RegisterLog align="space-between" justify="flex-start">
+                        {registerLog.map(register => <HandleLog key={register._id} {...register} />)}
+                    </RegisterLog>
+
+                    <Balance color={myBalance >= 0 ? "#03AC00" : "#C70000"}>
+                        <p>Saldo:</p>
+                        <p>{Math.abs(myBalance)}</p>
+                    </Balance>
+                </>
+            )
+        }
+
+    }
 
     return (
         <>
@@ -55,20 +88,7 @@ const Home = () => {
             </TopHeader>
 
             <ContainerRegister>
-                {loading
-                    ?
-                    <RegisterLog align="center" justify="center">
-                        <ThreeDots color="#00BFFF" height={60} width={60} />
-                    </RegisterLog>
-                    :
-                    <RegisterLog align="space-between" justify="flex-start">
-                        {registerLog.map(register => <HandleLog key={register._id} {...register} />)}
-                    </RegisterLog>
-                }
-                <Balance color={myBalance >= 0 ? "#03AC00" : "#C70000"}>
-                    <p>Saldo:</p>
-                    <p>{Math.abs(myBalance)}</p>
-                </Balance>
+                {renderContainerType()}
             </ContainerRegister>
 
 
@@ -131,6 +151,12 @@ const RegisterLog = styled.div`
     align-items: ${props => props.align};
     height: 60vh;
     overflow-y: scroll;
+    p {
+        font-size: 20px;
+        text-align: center;
+        width: 70%;
+        color: #868686;
+    }
     
 `
 
